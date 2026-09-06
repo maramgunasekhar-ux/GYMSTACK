@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GYMSTACK | Payments</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+<body>
+
+<header class="header">
+
+
+<h1>⚡ GYMSTACK</h1>
+
+<span>Gym Management System</span>
+
+
+</header>
+
+<main class="container">
+
+
+<!-- Page Header -->
+
+<section class="welcome">
+
+    <h2>Payments</h2>
+
+    <p>
+        View all client payments.
+    </p>
+
+
+    <a href="/dashboard"
+       class="add-client-btn">
+        Dashboard
+    </a>
+
+</section>
+
+<form method="GET" action="/payments" class="client-search">
+
+    <input
+        type="text"
+        name="search"
+        value="{{ search }}"
+        placeholder="Search by payment ID, client name, ID or method..."
+    >
+
+    <label>
+        From:
+    </label>
+
+    <input
+        type="date"
+        name="start_date"
+        value="{{ start_date_filter }}"
+    >
+
+    <label>
+        To:
+    </label>
+
+    <input
+        type="date"
+        name="end_date"
+        value="{{ end_date_filter }}"
+    >
+
+    <select name="status">
+
+        <option value="all"
+            {% if status_filter == "all" %}selected{% endif %}>
+            All Payments
+        </option>
+
+        <option value="paid"
+            {% if status_filter == "paid" %}selected{% endif %}>
+            Paid
+        </option>
+
+        <option value="partial"
+            {% if status_filter == "partial" %}selected{% endif %}>
+            Partial
+        </option>
+
+        <option value="pending"
+            {% if status_filter == "pending" %}selected{% endif %}>
+            Pending
+        </option>
+
+    </select>
+
+    <button type="submit" class="search-btn">
+        🔍 Search
+    </button>
+
+    {% if search or start_date_filter or end_date_filter
+          or status_filter != "all" %}
+
+        <a href="/payments" class="clear-search">
+            Clear
+        </a>
+
+    {% endif %}
+
+</form>
+<!-- Payment List -->
+
+<section class="card payment-list-card">
+
+    <h3>Payment History</h3>
+
+
+    {% if payments %}
+
+    <div class="payment-table-container">
+
+        <table class="payment-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Payment ID</th>
+
+                    <th>Client ID</th>
+
+                    <th>Client Name</th>
+
+                    <th>Amount</th>
+
+                    <th>Payment Date</th>
+
+                    <th>Payment Method</th>
+
+                    <th>Notes</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for payment in payments %}
+
+                <tr>
+
+                    <td class="payment-id">
+                        {{ payment[0] }}
+                    </td>
+
+                    <td>
+                        {{ payment[1] }}
+                    </td>
+
+                    <td class="payment-client-name">
+                        {{ payment[2] }}
+                    </td>
+
+                    <td class="payment-amount">
+                        ₹{{ payment[3] }}
+                    </td>
+
+                    <td>
+                        {{ payment[4] }}
+                    </td>
+
+                    <td>
+
+                        {% if payment[5] %}
+
+                            <span class="payment-method">
+                                {{ payment[5] }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="not-specified">
+                                Not specified
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if payment[6] %}
+
+                            {{ payment[6] }}
+
+                        {% else %}
+
+                            <span class="not-specified">
+                                -
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <div class="payment-actions">
+
+                            <a href="/edit-payment/{{ payment[0] }}"
+                               class="edit-payment-btn">
+                                Edit
+                            </a>
+
+
+                            <form action="/delete-payment/{{ payment[0] }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Are you sure you want to delete this payment?');">
+
+                                <button type="submit"
+                                        class="delete-payment-btn">
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="no-payments-list">
+
+        <h3>No payments found</h3>
+
+        <p>
+            Add a payment to see it here.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+</main>
+
+</body>
+
+</html>

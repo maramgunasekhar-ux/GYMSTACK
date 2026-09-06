@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>GYMSTACK | Overdue Memberships</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>⚡ GYMSTACK</h1>
+
+    <span>Gym Management System</span>
+
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h2>Overdue Memberships</h2>
+
+        <p>
+            Memberships that have already expired.
+        </p>
+
+        <a href="/dashboard" class="add-client-btn">
+            Dashboard
+        </a>
+
+    </section>
+
+
+    <section class="card overdue-list-card">
+
+        <h3>Expired Memberships</h3>
+
+
+        {% if memberships %}
+
+        <div class="overdue-table-container">
+
+            <table class="overdue-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Client ID</th>
+                        <th>Client Name</th>
+                        <th>Phone</th>
+                        <th>Membership</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Amount</th>
+                        <th>Payment Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for membership in memberships %}
+
+                    <tr>
+
+                        <td class="overdue-client-id">
+                            {{ membership[0] }}
+                        </td>
+
+                        <td class="overdue-client-name">
+                            {{ membership[1] }}
+                        </td>
+
+                        <td>
+                            {{ membership[2] }}
+                        </td>
+
+                        <td>
+
+                            <span class="overdue-membership-type">
+                                {{ membership[3] }}
+                            </span>
+
+                        </td>
+
+                        <td>
+                            {{ membership[4] }}
+                        </td>
+
+                        <td class="overdue-date">
+                            {{ membership[5] }}
+                        </td>
+
+                        <td class="overdue-amount">
+                            ₹{{ membership[6] }}
+                        </td>
+
+                        <td>
+
+                            {% if membership[7] == "Paid" %}
+
+                                <span class="status-paid">
+                                    Paid
+                                </span>
+
+                            {% elif membership[7] == "Partial" %}
+
+                                <span class="status-partial">
+                                    Partial
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-pending">
+                                    Pending
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="no-overdue-memberships">
+
+            <div class="no-overdue-icon">
+                ✓
+            </div>
+
+            <h3>No Overdue Memberships</h3>
+
+            <p>
+                There are no expired memberships at the moment.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

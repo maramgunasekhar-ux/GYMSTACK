@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>GYMSTACK | Revenue</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>⚡ GYMSTACK</h1>
+
+    <span>Gym Management System</span>
+
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h2>Revenue</h2>
+
+        <p>
+            View total payment revenue grouped by date.
+        </p>
+
+        <a href="/dashboard" class="add-client-btn">
+            Dashboard
+        </a>
+
+        <a href="/payments" class="add-client-btn">
+            Payments
+        </a>
+
+    </section>
+    
+     <form method="GET" action="/revenue" class="client-search">
+
+    <label for="start_date">
+        From:
+    </label>
+
+    <input
+        type="date"
+        id="start_date"
+        name="start_date"
+        value="{{ start_date }}"
+        required
+    >
+
+
+    <label for="end_date">
+        To:
+    </label>
+
+    <input
+        type="date"
+        id="end_date"
+        name="end_date"
+        value="{{ end_date }}"
+        required
+    >
+
+
+    <button type="submit" class="search-btn">
+        View Revenue
+    </button>
+
+
+    {% if start_date or end_date %}
+
+        <a href="/revenue" class="clear-search">
+            Clear
+        </a>
+
+    {% endif %}
+
+</form>
+
+    <section class="card membership-list-card">
+
+        <h3>Revenue by Date</h3>
+
+
+        {% if revenue_data %}
+
+        <div class="membership-table-container">
+
+            <table class="membership-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date</th>
+
+                        <th>Total Revenue</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for revenue in revenue_data %}
+
+                    <tr>
+
+                        <td>
+                            {{ revenue[0] }}
+                        </td>
+
+                        <td class="membership-amount">
+                            ₹{{ revenue[1] }}
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="no-memberships">
+
+            <h3>No Revenue Found</h3>
+
+            <p>
+                No payments have been recorded yet.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

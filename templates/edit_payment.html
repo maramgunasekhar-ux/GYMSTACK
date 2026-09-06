@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GYMSTACK | Edit Payment</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+    <h1>⚡ GYMSTACK</h1>
+    <span>Gym Management System</span>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Edit Payment</h2>
+        <p>Update the payment information below.</p>
+    </div>
+
+    <form method="POST">
+
+        <label>Client</label>
+        <br>
+
+        <input type="text"
+               value="{{ payment[1] }} - {{ payment[2] }}"
+               readonly>
+
+        <br><br>
+
+
+        <label>Amount *</label>
+        <br>
+
+        <input type="number"
+               name="amount"
+               value="{{ payment[3] }}"
+               step="0.01"
+               min="0"
+               required>
+
+        <br><br>
+
+
+        <label>Payment Date *</label>
+        <br>
+
+        <input type="date"
+               name="payment_date"
+               value="{{ payment[4] }}"
+               required>
+
+        <br><br>
+
+
+        <label>Payment Method</label>
+        <br>
+
+        <select name="payment_method">
+
+            <option value="">Select Method</option>
+
+            <option value="Cash"
+                {% if payment[5] == 'Cash' %}selected{% endif %}>
+                Cash
+            </option>
+
+            <option value="UPI"
+                {% if payment[5] == 'UPI' %}selected{% endif %}>
+                UPI
+            </option>
+
+            <option value="Card"
+                {% if payment[5] == 'Card' %}selected{% endif %}>
+                Card
+            </option>
+
+            <option value="Bank Transfer"
+                {% if payment[5] == 'Bank Transfer' %}selected{% endif %}>
+                Bank Transfer
+            </option>
+
+        </select>
+
+        <br><br>
+
+
+        <label>Notes</label>
+        <br>
+
+        <textarea name="notes"
+                  rows="4"
+                  placeholder="Optional notes">{{ payment[6] or '' }}</textarea>
+
+        <br><br>
+
+
+        <button type="submit" class="add-client-btn">
+            Update Payment
+        </button>
+
+        <a href="/payments" class="add-client-btn">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

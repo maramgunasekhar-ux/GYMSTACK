@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GYMSTACK | Edit Client</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+<body>
+
+<header class="header">
+
+
+<h1>⚡ GYMSTACK</h1>
+
+<span>Gym Management System</span>
+
+
+</header>
+
+<div class="container">
+
+
+<div class="welcome">
+
+    <h2>Edit Client</h2>
+
+    <p>Update the client's information below.</p>
+
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+
+    <label>Full Name *</label>
+
+    <input type="text"
+           name="name"
+           value="{{ client[1] }}"
+           required>
+
+    <br><br>
+
+    <label>Phone *</label>
+
+    <input type="text"
+           name="phone"
+           value="{{ client[2] }}"
+           required>
+
+    <br><br>
+
+    <label>Date of Birth</label>
+
+    <input type="date"
+           name="date_of_birth"
+           value="{{ client[3] or '' }}">
+
+    <br><br>
+
+    <label>Gender</label>
+
+    <select name="gender">
+
+        <option value="">Select Gender</option>
+
+        <option value="Male"
+            {% if client[4] == 'Male' %}selected{% endif %}>
+            Male
+        </option>
+
+        <option value="Female"
+            {% if client[4] == 'Female' %}selected{% endif %}>
+            Female
+        </option>
+
+        <option value="Other"
+            {% if client[4] == 'Other' %}selected{% endif %}>
+            Other
+        </option>
+
+    </select>
+
+    <br><br>
+
+    <label>Joining Date *</label>
+
+    <input type="date"
+           name="joining_date"
+           value="{{ client[5] }}"
+           required>
+
+    <br><br>
+
+    <label>Address</label>
+
+    <input type="text"
+           name="address"
+           value="{{ client[6] or '' }}">
+
+    <br><br>
+
+    <label>Emergency Contact</label>
+
+    <input type="text"
+           name="emergency_contact"
+           value="{{ client[7] or '' }}">
+
+    <br><br>
+
+    <label>Current Client Photo</label>
+
+    <br><br>
+
+    {% if client[8] %}
+
+        <img src="{{ url_for('static', filename='uploads/clients/' + client[8]) }}"
+             alt="Current Client Photo"
+             class="client-profile-photo">
+
+    {% else %}
+
+        <p>No photo uploaded.</p>
+
+    {% endif %}
+
+    <br>
+
+    <label>Upload New Photo</label>
+
+    <input type="file"
+           name="photo"
+           accept=".jpg,.jpeg,.png,.webp">
+
+    <br><br>
+
+    <button type="submit" class="add-client-btn">
+
+        Update Client
+
+    </button>
+
+    <a href="/client/{{ client[0] }}" class="add-client-btn">
+
+        Cancel
+
+    </a>
+
+</form>
+
+
+</div>
+
+</body>
+
+</html>

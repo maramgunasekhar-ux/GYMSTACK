@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GYMSTACK | Pending Payments</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+<body>
+
+<header class="header">
+
+
+<h1>⚡ GYMSTACK</h1>
+
+<span>Gym Management System</span>
+
+
+</header>
+
+<main class="container">
+
+
+<!-- Page Header -->
+
+<section class="welcome">
+
+    <h2>Pending Payments</h2>
+
+    <p>
+        Memberships with pending or partial payment status.
+    </p>
+
+    <a href="/payments"
+       class="add-client-btn">
+        View All Payments
+    </a>
+
+    <a href="/dashboard"
+       class="add-client-btn">
+        Dashboard
+    </a>
+
+</section>
+
+
+<!-- Pending Payment List -->
+
+<section class="card pending-list-card">
+
+    <h3>Payment Dues</h3>
+
+
+    {% if pending_payments %}
+
+    <div class="pending-table-container">
+
+        <table class="pending-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Client ID</th>
+
+                    <th>Client Name</th>
+
+                    <th>Membership</th>
+
+                    <th>Membership Amount</th>
+
+                    <th>Total Paid</th>
+
+                    <th>Remaining Amount</th>
+
+                    <th>Payment Status</th>
+
+                    <th>Start Date</th>
+
+                    <th>End Date</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for payment in pending_payments %}
+
+                <tr>
+
+                    <td class="pending-client-id">
+                        {{ payment[0] }}
+                    </td>
+
+                    <td class="pending-client-name">
+                        {{ payment[1] }}
+                    </td>
+
+                    <td>
+
+                        <span class="pending-membership">
+                            {{ payment[2] }}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        ₹{{ payment[3] }}
+                    </td>
+
+                    <td class="pending-paid">
+                        ₹{{ payment[4] }}
+                    </td>
+
+                    <td class="pending-remaining">
+                        ₹{{ payment[3] - payment[4] }}
+                    </td>
+
+                    <td>
+
+                        {% if payment[5] == "Partial" %}
+
+                            <span class="status-partial">
+                                Partial
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-pending">
+                                Pending
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ payment[6] }}
+                    </td>
+
+                    <td>
+                        {{ payment[7] }}
+                    </td>
+
+                    <td>
+
+                        <a href="/add-payment?client_id={{ payment[0] }}&membership_id={{ payment[8] }}"
+                           class="pending-add-btn">
+                            + Add Payment
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="no-pending-payments">
+
+        <div class="no-pending-icon">
+            ✓
+        </div>
+
+        <h3>No Pending Payments</h3>
+
+        <p>
+            All membership payments are up to date.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+</main>
+
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GYMSTACK | Clients</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <header class="header">
+
+        <h1>⚡ GYMSTACK</h1>
+
+        <span>Gym Management System</span>
+
+    </header>
+
+
+    <main class="container">
+
+        <section class="welcome">
+
+            <h2>All Clients</h2>
+
+            <p>View all registered fitness clients.</p>
+
+
+            <a href="/dashboard" class="add-client-btn">
+                Dashboard
+            </a>
+
+        </section>
+
+
+        <!-- Client Search -->
+
+        <form method="GET"
+              action="/clients"
+              class="client-search">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search by name or phone..."
+            >
+
+            <button type="submit" class="search-btn">
+                🔍 Search
+            </button>
+
+            {% if search %}
+
+                <a href="/clients" class="clear-search">
+                    Clear
+                </a>
+
+            {% endif %}
+
+        </form>
+
+
+        <!-- Client List -->
+
+        <section class="card client-list-card">
+
+            <h3>Client List</h3>
+
+            <br>
+            <div class="client-table-container">
+            <table class="client-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Photo</th>
+
+                        <th>ID</th>
+
+                        <th>Name</th>
+
+                        <th>Phone</th>
+
+                        <th>Gender</th>
+
+                        <th>Joining Date</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for client in clients %}
+
+                    <tr>
+                        <td>
+                           {% if client[8] %}
+                      <img src="{{ url_for('static', filename='uploads/clients/' + client[8]) }}"
+                              alt="Client Photo"
+                             class="client-list-photo">
+                         {% else %}
+                          <span>No Photo</span>
+                           {% endif %}
+                      </td>
+
+                        <td class="client-id">{{ client[0] }}</td>
+
+                        <td>{{ client[1] }}</td>
+
+                        <td>{{ client[2] }}</td>
+
+                        <td>{{ client[4] or '-' }}</td>
+
+                        <td>{{ client[5] }}</td>
+
+                        <td>
+
+                            <a href="/client/{{ client[0] }}"
+                               class="view-client-btn">
+
+                                View Details
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="7"
+                            style="text-align: center;">
+
+                            No clients found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

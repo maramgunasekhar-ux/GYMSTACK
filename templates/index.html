@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GYMSTACK | Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>⚡ GYMSTACK</h1>
+         <div>
+        <span>Gym Management System</span>
+
+        <a href="/logout"
+           style="color: white; margin-left: 20px;">
+            Logout
+        </a>
+    </div>
+    </header>
+
+
+    <main class="container">
+
+        <section class="welcome">
+            <h2>Dashboard</h2>
+            <p>Welcome to your Fitness Management System.</p>
+
+           
+            <a href="/clients" class="add-client-btn">
+                View Clients
+             </a>
+
+
+              
+            <a href="/memberships" class="add-client-btn">
+    View Memberships
+             </a>
+             
+
+              <a href="/payments" class="add-client-btn">
+    View Payments
+              </a>
+        </section>
+
+
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total Clients</h3>
+                <p>{{ total_clients }}</p>
+            </div>
+        <a href="/active-members" class="dashboard-card-link">
+
+            <div class="card">
+                <h3>Active Members</h3>
+                <p>{{ active_members }}</p>
+            </div>
+
+        </a>  
+                <a href="/expiring-memberships" class="dashboard-card-link">
+
+    <div class="card">
+
+        <h3>Expiring Soon</h3>
+
+        <p>{{ expiring_soon }}</p>
+
+        <span class="dashboard-card-link-text">
+            View Expiring Memberships →
+        </span>
+
+    </div>
+
+</a>
+
+
+                <a href="/overdue-memberships" class="dashboard-card-link">
+
+    <div class="card">
+
+        <h3>Overdue Memberships</h3>
+
+        <p>{{ overdue_memberships }}</p>
+
+          <span class="dashboard-card-link-text">
+            View Overdue Memberships →
+           </span>
+
+         </div>
+
+       </a>
+
+            </div>
+
+        <a href="/revenue" class="dashboard-card-link">
+
+            <div class="card">
+                <h3>Total Revenue</h3>
+                 <p>₹{{ total_revenue }}</p>
+            </div>
+         <a>
+            <div class="card">
+                <h3>Pending Amount</h3>
+               <p>₹{{ pending_amount }}</p>
+            </div>
+            <a href="/recent-payments" class="dashboard-card-link">
+
+    <div class="card recent-payment-card">
+
+        <div class="recent-payment-icon">
+            ₹
+        </div>
+
+        <h3>Recent Payments</h3>
+
+        <p>{{ recent_payment_count }}</p>
+
+        <span>View Latest Payments →</span>
+
+    </div>
+
+        </a>
+
+            <div class="quick-actions">
+
+    <h2>Quick Actions</h2>
+
+    <div class="action-buttons">
+
+        <a href="/add-client" class="action-btn">
+            <div class="action-icon">👤</div>
+            <div>Add Client</div>
+        </a>
+
+        <a href="/add-membership" class="action-btn">
+            <div class="action-icon">📋</div>
+            <div>Add Membership</div>
+        </a>
+
+        <a href="/add-payment" class="action-btn">
+            <div class="action-icon">₹</div>
+            <div>Add Payment</div>
+        </a>
+
+    </div>
+  </div> 
+
+
+          <a href="/pending-payments" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <h3>Pending Payments</h3>
+                <p>{{ pending_payments }}</p>
+            </div>
+          </a>
+
+          
+        </section>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GYMSTACK | Client Details</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>⚡ GYMSTACK</h1>
+        <span>Gym Management System</span>
+    </header>
+
+    <main class="container">
+
+        <section class="welcome">
+            <h2>Client Details</h2>
+            <p>Complete information about this client.</p>
+        </section>
+
+        <section class="card">
+
+    <h3>Personal Information</h3>
+
+    <br>
+
+    {% if client[9] %}
+        <img src="{{ url_for('static', filename='uploads/clients/' + client[9]) }}"
+             alt="Client Photo"
+             class="client-profile-photo">
+    {% else %}
+        <p><strong>Client Photo:</strong> No photo uploaded.</p>
+    {% endif %}
+
+   
+
+            <br>
+
+            <p><strong>Client ID:</strong> {{ client[0] }}</p>
+
+            <br>
+
+            <p><strong>Name:</strong> {{ client[1] }}</p>
+
+            <br>
+
+            <p><strong>Phone:</strong> {{ client[2] }}</p>
+
+            <br>
+
+            <p>
+                <strong>Date of Birth:</strong>
+                {{ client[3] or '-' }}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Gender:</strong>
+                {{ client[4] or '-' }}
+            </p>
+
+            <br>
+
+            <p><strong>Joining Date:</strong> {{ client[5] }}</p>
+
+            <br>
+
+            <p>
+                <strong>Address:</strong>
+                {{ client[6] or '-' }}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Emergency Contact:</strong>
+                {{ client[7] or '-' }}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Created At:</strong>
+                {{ client[8] }}
+            </p>
+
+            <br>
+            <a href="/edit-client/{{ client[0] }}" class="add-client-btn">
+                   Edit Client
+            </a>
+
+
+            <form action="/delete-client/{{ client[0] }}"
+      method="POST"
+      style="display: inline;"
+      onsubmit="return confirm('Are you sure you want to delete this client?');">
+
+    <button type="submit" class="add-client-btn">
+        Delete Client
+    </button>
+
+             </form>
+
+             
+
+            <a href="/clients" class="add-client-btn">
+                ← Back to Clients
+            </a>
+
+
+            <a href="/dashboard" class="add-client-btn">
+                Dashboard
+            </a>
+
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

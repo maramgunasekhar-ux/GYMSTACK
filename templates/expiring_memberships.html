@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>GYMSTACK | Expiring Memberships</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>⚡ GYMSTACK</h1>
+
+    <span>Gym Management System</span>
+
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h2>Expiring Memberships</h2>
+
+        <p>
+            Memberships expiring within the next 7 days.
+        </p>
+
+        <a href="/dashboard" class="add-client-btn">
+            Dashboard
+        </a>
+
+    </section>
+
+
+    <section class="card expiring-list-card">
+
+        <h3>Memberships Expiring Soon</h3>
+
+
+        {% if memberships %}
+
+        <div class="expiring-table-container">
+
+            <table class="expiring-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Client ID</th>
+
+                        <th>Client Name</th>
+
+                        <th>Phone</th>
+
+                        <th>Membership</th>
+
+                        <th>Start Date</th>
+
+                        <th>End Date</th>
+
+                        <th>Amount</th>
+
+                        <th>Payment Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for membership in memberships %}
+
+                    <tr>
+
+                        <td class="expiring-client-id">
+                            {{ membership[0] }}
+                        </td>
+
+                        <td class="expiring-client-name">
+                            {{ membership[1] }}
+                        </td>
+
+                        <td>
+                            {{ membership[2] }}
+                        </td>
+
+                        <td>
+                            <span class="expiring-membership-type">
+                                {{ membership[3] }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ membership[4] }}
+                        </td>
+
+                        <td class="expiring-date">
+                            {{ membership[5] }}
+                        </td>
+
+                        <td class="expiring-amount">
+                            ₹{{ membership[6] }}
+                        </td>
+
+                        <td>
+
+                            {% if membership[7] == "Paid" %}
+
+                                <span class="status-paid">
+                                    Paid
+                                </span>
+
+                            {% elif membership[7] == "Partial" %}
+
+                                <span class="status-partial">
+                                    Partial
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-pending">
+                                    Pending
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="no-expiring-memberships">
+
+            <div class="no-expiring-icon">
+                ✓
+            </div>
+
+            <h3>No Expiring Memberships</h3>
+
+            <p>
+                No memberships are expiring within the next 7 days.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>GYMSTACK | Recent Payments</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>⚡ GYMSTACK</h1>
+
+    <div>
+        <span>Gym Management System</span>
+
+        <a href="/logout"
+           style="color: white; margin-left: 20px;">
+            Logout
+        </a>
+    </div>
+
+</header>
+
+
+<div class="container">
+
+    <div class="recent-page-header">
+
+        <div>
+            <h2>Recent Payments</h2>
+            <p>Latest payment transactions</p>
+        </div>
+
+        <a href="/payments" class="add-client-btn">
+            View All Payments
+        </a>
+
+    </div>
+
+
+    <div class="payment-cards">
+
+        {% if recent_payments %}
+
+            {% for payment in recent_payments %}
+
+            <div class="payment-card">
+
+                <div class="payment-card-top">
+
+                    <div class="payment-icon">
+                        ₹
+                    </div>
+
+                    <strong>
+                        Payment #{{ payment[0] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="payment-client">
+
+                    <span>Client</span>
+
+                    <h3>
+                        {{ payment[1] }}
+                    </h3>
+
+                </div>
+
+
+                <div class="payment-amount">
+
+                    ₹{{ payment[2] }}
+
+                </div>
+
+
+                <div class="payment-info">
+
+                    <span>
+                        📅 {{ payment[3] }}
+                    </span>
+
+                    <span>
+                        •
+                    </span>
+
+                    <span>
+                        {{ payment[4] or "Not specified" }}
+                    </span>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="no-payments">
+
+                <h3>No payments yet</h3>
+
+                <p>
+                    Recent payment transactions will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

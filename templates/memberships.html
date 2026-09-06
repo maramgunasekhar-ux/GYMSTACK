@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>GYMSTACK | Memberships</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>⚡ GYMSTACK</h1>
+
+    <span>Gym Management System</span>
+
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h2>Memberships</h2>
+
+        <p>View all client memberships.</p>
+
+        <a href="/dashboard" class="add-client-btn">
+            Dashboard
+        </a>
+
+    </section>
+
+
+    <!-- Search and Filter -->
+
+    <form method="GET"
+          action="/memberships"
+          class="client-search">
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            placeholder="Search by client name, ID or membership..."
+        >
+        <label>
+    FROM:
+</label>
+
+<input
+    type="date"
+    name="start_date"
+    value="{{ start_date_filter }}"
+>
+
+<label>
+    TO:
+</label>
+
+<input
+    type="date"
+    name="end_date"
+    value="{{ end_date_filter }}"
+>
+
+        <select name="status">
+
+            <option value="all"
+                {% if status_filter == "all" %}selected{% endif %}>
+                All Memberships
+            </option>
+
+            <option value="active"
+                {% if status_filter == "active" %}selected{% endif %}>
+                Active
+            </option>
+
+            <option value="expiring"
+                {% if status_filter == "expiring" %}selected{% endif %}>
+                Expiring Soon
+            </option>
+
+            <option value="expired"
+                {% if status_filter == "expired" %}selected{% endif %}>
+                Expired
+            </option>
+
+            <option value="pending"
+                {% if status_filter == "pending" %}selected{% endif %}>
+                Pending Payment
+            </option>
+
+        </select>
+
+
+        <button type="submit" class="search-btn">
+            🔍 Search
+        </button>
+
+
+        {% if search or status_filter != "all" %}
+
+            <a href="/memberships"
+               class="clear-search">
+                Clear
+            </a>
+
+        {% endif %}
+
+    </form>
+
+
+    <!-- Membership List -->
+
+    <section class="card membership-list-card">
+
+        <h3>Membership List</h3>
+
+
+        {% if memberships %}
+
+        <div class="membership-table-container">
+
+            <table class="membership-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Membership ID</th>
+
+                        <th>Client ID</th>
+
+                        <th>Client Name</th>
+
+                        <th>Membership</th>
+
+                        <th>Start Date</th>
+
+                        <th>End Date</th>
+
+                        <th>Amount</th>
+
+                        <th>Payment Status</th>
+
+                        <th>Membership Status</th>
+
+                        <th>Days Remaining</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for membership in memberships %}
+
+                    <tr>
+
+                        <!-- Membership ID -->
+
+                        <td>
+                            {{ membership[0] }}
+                        </td>
+
+
+                        <!-- Client ID -->
+
+                        <td class="membership-client-id">
+                            {{ membership[1] }}
+                        </td>
+
+
+                        <!-- Client Name -->
+
+                        <td class="membership-client-name">
+                            {{ membership[2] }}
+                        </td>
+
+
+                        <!-- Membership Type -->
+
+                        <td>
+
+                            <span class="membership-type">
+                                {{ membership[3] }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- Start Date -->
+
+                        <td>
+                            {{ membership[4] }}
+                        </td>
+
+
+                        <!-- End Date -->
+
+                        <td>
+                            {{ membership[5] }}
+                        </td>
+
+
+                        <!-- Amount -->
+
+                        <td class="membership-amount">
+                            ₹{{ membership[6] }}
+                        </td>
+
+
+                        <!-- Payment Status -->
+
+                        <td>
+
+                            {% if membership[7] == "Paid" %}
+
+                                <span class="status-paid">
+                                    Paid
+                                </span>
+
+                            {% elif membership[7] == "Partial" %}
+
+                                <span class="status-partial">
+                                    Partial
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-pending">
+                                    Pending
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Membership Status -->
+
+                        <td>
+
+                            {% if membership[8] == "Active" %}
+
+                                <span class="membership-status-active">
+                                    Active
+                                </span>
+
+                            {% elif membership[8] == "Expiring Soon" %}
+
+                                <span class="membership-status-expiring">
+                                    Expiring Soon
+                                </span>
+
+                            {% else %}
+
+                                <span class="membership-status-expired">
+                                    Expired
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Days Remaining -->
+
+                        <td>
+
+                            {% if membership[9] < 0 %}
+
+                                {{ membership[9] | abs }} days ago
+
+                            {% elif membership[9] == 0 %}
+
+                                Expires today
+
+                            {% else %}
+
+                                {{ membership[9] }} days
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Actions -->
+
+                        <td>
+
+                            <div class="membership-actions">
+
+                                <a
+                                    href="/edit-membership/{{ membership[1] }}/{{ membership[4] }}"
+                                    class="edit-membership-btn">
+
+                                    Edit
+
+                                </a>
+
+
+                                <form
+                                    action="/delete-membership/{{ membership[1] }}/{{ membership[4] }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this membership?');">
+
+                                    <button
+                                        type="submit"
+                                        class="delete-membership-btn">
+
+                                        Delete
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+            <div class="no-memberships">
+
+                <h3>No memberships found</h3>
+
+                <p>
+                    No memberships match your search or filter.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

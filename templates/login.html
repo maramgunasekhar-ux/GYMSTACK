@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GYMSTACK | Login</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+    <h1>⚡ GYMSTACK</h1>
+    <span>Admin Login</span>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Admin Login</h2>
+        <p>Gym Management System</p>
+    </div>
+
+    <form method="POST">
+
+        <label>Username</label>
+        <br>
+
+        <input type="text"
+               name="username"
+               required>
+
+        <br><br>
+
+        <label>Password</label>
+        <br>
+
+        <input type="password"
+               name="password"
+               required>
+
+        <br><br>
+
+        <button type="submit" class="add-client-btn">
+            Login
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

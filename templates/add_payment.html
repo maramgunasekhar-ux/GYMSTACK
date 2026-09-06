@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GYMSTACK | Add Payment</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+    <h1>⚡ GYMSTACK</h1>
+    <span>Gym Management System</span>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Add Payment</h2>
+        <p>Record a payment made by a client.</p>
+    </div>
+
+    <form method="POST">
+        <div class="card">
+
+            <!-- CLIENT -->
+
+            <label>Client *</label>
+
+            <div class="client-selector">
+
+                <input type="text"
+                       id="client_search"
+                       placeholder="Type client name or ID..."
+                       autocomplete="off"
+                       value="">
+
+                <input type="hidden"
+                       name="client_id"
+                       id="client_id"
+                       value="{{ selected_client_id }}">
+
+                <!-- MEMBERSHIP ID -->
+
+                <input type="hidden"
+                       name="membership_id"
+                       id="membership_id"
+                       value="{{ selected_membership_id }}">
+
+                <div id="client_results"
+                     style="display: none;">
+
+                    {% for client in clients %}
+
+                        <div class="client-option"
+                             data-id="{{ client[0] }}"
+                             data-name="{{ client[1] }}">
+
+                            {{ client[0] }} - {{ client[1] }}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <br>
+
+
+            <!-- AMOUNT -->
+
+            <label>Amount *</label>
+            <br>
+
+            <input type="number"
+                   name="amount"
+                   step="0.01"
+                   min="0"
+                   required>
+
+            <br><br>
+
+
+            <!-- PAYMENT DATE -->
+
+            <label>Payment Date *</label>
+            <br>
+
+            <input type="date"
+                   name="payment_date"
+                   required>
+
+            <br><br>
+
+
+            <!-- PAYMENT METHOD -->
+
+            <label>Payment Method</label>
+            <br>
+
+            <select name="payment_method">
+
+                <option value="">Select Method</option>
+
+                <option value="Cash">Cash</option>
+
+                <option value="UPI">UPI</option>
+
+                <option value="Card">Card</option>
+
+                <option value="Bank Transfer">
+                    Bank Transfer
+                </option>
+
+            </select>
+
+            <br><br>
+
+
+            <!-- NOTES -->
+
+            <label>Notes</label>
+            <br>
+
+            <textarea name="notes"
+                      rows="4"
+                      placeholder="Optional notes"></textarea>
+
+            <br><br>
+
+
+            <!-- BUTTONS -->
+
+            <button type="submit"
+                    class="add-client-btn">
+                Add Payment
+            </button>
+
+            <a href="/dashboard"
+               class="add-client-btn">
+                Dashboard
+            </a>
+
+        </div>
+    </form>
+
+</div>
+
+
+<script>
+
+const searchInput =
+    document.getElementById("client_search");
+
+const clientResults =
+    document.getElementById("client_results");
+
+const clientIdInput =
+    document.getElementById("client_id");
+
+const membershipIdInput =
+    document.getElementById("membership_id");
+
+
+// =====================================================
+// SHOW SELECTED CLIENT WHEN COMING FROM PENDING PAYMENTS
+// =====================================================
+
+const selectedClientId =
+    clientIdInput.value.trim();
+
+if (selectedClientId) {
+
+    const selectedOption =
+        clientResults.querySelector(
+            `.client-option[data-id="${selectedClientId}"]`
+        );
+
+    if (selectedOption) {
+
+        searchInput.value =
+            selectedOption.dataset.id +
+            " - " +
+            selectedOption.dataset.name;
+
+    }
+
+}
+
+
+// =====================================================
+// SEARCH CLIENTS
+// =====================================================
+
+searchInput.addEventListener("input", function () {
+
+    const searchText =
+        this.value.toLowerCase().trim();
+
+
+    // Clear previously selected client
+
+    clientIdInput.value = "";
+
+
+    // IMPORTANT:
+    // Clear membership when changing client
+
+    membershipIdInput.value = "";
+
+
+    const options =
+        clientResults.querySelectorAll(
+            ".client-option"
+        );
+
+
+    options.forEach(function (option) {
+
+        const clientId =
+            option.dataset.id.toLowerCase();
+
+        const clientName =
+            option.dataset.name.toLowerCase();
+
+
+        if (
+            clientId.includes(searchText) ||
+            clientName.includes(searchText)
+        ) {
+
+            option.style.display = "block";
+
+        } else {
+
+            option.style.display = "none";
+
+        }
+
+    });
+
+
+    clientResults.style.display = "block";
+
+});
+
+
+// =====================================================
+// SELECT CLIENT
+// =====================================================
+
+document.querySelectorAll(".client-option")
+.forEach(function (option) {
+
+    option.addEventListener("click", function () {
+
+        searchInput.value =
+            this.dataset.id +
+            " - " +
+            this.dataset.name;
+
+
+        clientIdInput.value =
+            this.dataset.id;
+
+
+        // Since the user manually selected
+        // a different client, remove old membership
+
+        membershipIdInput.value = "";
+
+
+        clientResults.style.display = "none";
+
+    });
+
+});
+
+
+// =====================================================
+// SHOW CLIENTS WHEN SEARCH BOX IS FOCUSED
+// =====================================================
+
+searchInput.addEventListener("focus", function () {
+
+    clientResults.style.display = "block";
+
+});
+
+
+// =====================================================
+// FORM VALIDATION
+// =====================================================
+
+document.querySelector("form")
+.addEventListener("submit", function (event) {
+
+    // Check client
+
+    if (!clientIdInput.value) {
+
+        event.preventDefault();
+
+        alert(
+            "Please select a client."
+        );
+
+        searchInput.focus();
+
+        return;
+    }
+
+
+    // Check membership
+
+    if (!membershipIdInput.value) {
+
+        event.preventDefault();
+
+        alert(
+            "Please select a valid membership for this client."
+        );
+
+        return;
+    }
+
+});
+
+</script>
+
+</body>
+</html>

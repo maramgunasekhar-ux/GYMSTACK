@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GYMSTACK | Active Members</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>⚡ GYMSTACK</h1>
+
+    <span>Gym Management System</span>
+
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h2>Active Members</h2>
+
+        <p>
+            Members whose memberships are currently active,
+            including those expiring within 7 days.
+        </p>
+
+        <a href="/dashboard" class="add-client-btn">
+            Dashboard
+        </a>
+
+        <a href="/memberships" class="add-client-btn">
+            All Memberships
+        </a>
+
+    </section>
+
+
+    <section class="card membership-list-card">
+
+        <h3>Active Member List</h3>
+
+
+        {% if memberships %}
+
+        <div class="membership-table-container">
+
+            <table class="membership-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Client ID</th>
+
+                        <th>Client Name</th>
+
+                        <th>Phone</th>
+
+                        <th>Membership</th>
+
+                        <th>Start Date</th>
+
+                        <th>End Date</th>
+
+                        <th>Payment Status</th>
+
+                        <th>Membership Status</th>
+
+                        <th>Days Remaining</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for membership in memberships %}
+
+                    {% set days_remaining =
+                       (membership[5] - current_date).days %}
+
+                    <tr>
+
+                        <td>
+                            {{ membership[0] }}
+                        </td>
+
+
+                        <td>
+                            {{ membership[1] }}
+                        </td>
+
+
+                        <td>
+                            {{ membership[2] }}
+                        </td>
+
+
+                        <td>
+                            <span class="membership-type">
+                                {{ membership[3] }}
+                            </span>
+                        </td>
+
+
+                        <td>
+                            {{ membership[4] }}
+                        </td>
+
+
+                        <td>
+                            {{ membership[5] }}
+                        </td>
+
+
+                        <td>
+
+                            {% if membership[7] == "Paid" %}
+
+                                <span class="status-paid">
+                                    Paid
+                                </span>
+
+                            {% elif membership[7] == "Partial" %}
+
+                                <span class="status-partial">
+                                    Partial
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-pending">
+                                    Pending
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if days_remaining <= 7 %}
+
+                                <span class="membership-status-expiring">
+                                    Expiring Soon
+                                </span>
+
+                            {% else %}
+
+                                <span class="membership-status-active">
+                                    Active
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if days_remaining == 0 %}
+
+                                Expires today
+
+                            {% else %}
+
+                                {{ days_remaining }} days
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="no-memberships">
+
+            <h3>No Active Members</h3>
+
+            <p>
+                There are currently no active memberships.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

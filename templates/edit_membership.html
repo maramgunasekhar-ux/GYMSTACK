@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GYMSTACK | Edit Membership</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="header">
+    <h1>⚡ GYMSTACK</h1>
+    <span>Gym Management System</span>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Edit Membership</h2>
+        <p>Update the membership information below.</p>
+    </div>
+
+    <form method="POST">
+
+        <!-- Client -->
+        <label>Client</label>
+        <input type="text"
+               value="{{ membership[0] }} - {{ membership[1] }}"
+               readonly>
+
+        <br><br>
+
+        <!-- Membership Type -->
+        <label>Membership Type *</label>
+        <select name="membership_type" required>
+
+            <option value="Monthly"
+                {% if membership[2] == 'Monthly' %}selected{% endif %}>
+                Monthly
+            </option>
+
+            <option value="Quarterly"
+                {% if membership[2] == 'Quarterly' %}selected{% endif %}>
+                Quarterly
+            </option>
+
+            <option value="Half-Yearly"
+                {% if membership[2] == 'Half-Yearly' %}selected{% endif %}>
+                Half-Yearly
+            </option>
+
+            <option value="Yearly"
+                {% if membership[2] == 'Yearly' %}selected{% endif %}>
+                Yearly
+            </option>
+
+        </select>
+
+        <br><br>
+
+        <!-- Start Date -->
+        <label>Start Date *</label>
+        <input type="date"
+               name="start_date"
+               id="start_date"
+               value="{{ membership[3] }}"
+               required>
+
+        <br><br>
+
+        <!-- End Date -->
+        <label>End Date</label>
+        <input type="date"
+               name="end_date"
+               id="end_date"
+               value="{{ membership[4] }}"
+               readonly>
+
+        <br><br>
+
+        <!-- Amount -->
+        <label>Amount *</label>
+        <input type="number"
+               name="amount"
+               value="{{ membership[5] }}"
+               step="0.01"
+               min="0"
+               required>
+
+        <br><br>
+
+        <!-- Payment Status -->
+        <label>Payment Status</label>
+        <select name="payment_status">
+
+            <option value="Pending"
+                {% if membership[6] == 'Pending' %}selected{% endif %}>
+                Pending
+            </option>
+
+            <option value="Paid"
+                {% if membership[6] == 'Paid' %}selected{% endif %}>
+                Paid
+            </option>
+
+            <option value="Partial"
+                {% if membership[6] == 'Partial' %}selected{% endif %}>
+                Partial
+            </option>
+
+        </select>
+
+        <br><br>
+
+        <button type="submit" class="add-client-btn">
+            Update Membership
+        </button>
+
+        <a href="/memberships" class="add-client-btn">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+<script>
+
+    const membershipType =
+        document.querySelector('select[name="membership_type"]');
+
+    const startDate =
+        document.querySelector('input[name="start_date"]');
+
+    const endDate =
+        document.querySelector('input[name="end_date"]');
+
+
+    function calculateEndDate() {
+
+        if (!startDate.value || !membershipType.value) {
+            endDate.value = "";
+            return;
+        }
+
+        const date = new Date(startDate.value);
+
+        switch (membershipType.value) {
+
+            case "Monthly":
+                date.setMonth(date.getMonth() + 1);
+                break;
+
+            case "Quarterly":
+                date.setMonth(date.getMonth() + 3);
+                break;
+
+            case "Half-Yearly":
+                date.setMonth(date.getMonth() + 6);
+                break;
+
+            case "Yearly":
+                date.setFullYear(date.getFullYear() + 1);
+                break;
+        }
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        endDate.value = `${year}-${month}-${day}`;
+    }
+
+
+    membershipType.addEventListener("change", calculateEndDate);
+
+    startDate.addEventListener("change", calculateEndDate);
+
+</script>
+
+</body>
+</html>

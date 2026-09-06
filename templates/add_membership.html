@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>GYMSTACK | Add Membership</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+<body>
+
+<header class="header">
+    <h1>⚡ GYMSTACK</h1>
+    <span>Gym Management System</span>
+</header>
+
+<div class="container">
+
+
+<div class="welcome">
+    <h2>Add Membership</h2>
+    <p>Create a membership for an existing client.</p>
+</div>
+
+<form method="POST"  >
+<div class="card">
+    <!-- Client -->
+
+    <label>Client *</label>
+
+<div class="client-selector">
+
+    <input type="text"
+           id="client_search"
+           placeholder="Type client name or ID..."
+           autocomplete="off"
+           required>
+
+    <input type="hidden"
+           name="client_id"
+           id="client_id">
+
+    <div id="client_results">
+
+        {% for client in clients %}
+
+        <div class="client-option"
+             data-id="{{ client[0] }}"
+             data-name="{{ client[1] }}">
+            {{ client[0] }} - {{ client[1] }}
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+      </div>
+    <br><br>
+
+
+    <!-- Membership Type -->
+
+    <label>Membership Type *</label>
+
+    <select name="membership_type" required>
+
+        <option value="">Select Membership</option>
+
+        <option value="Monthly">Monthly</option>
+
+        <option value="Quarterly">Quarterly</option>
+
+        <option value="Half-Yearly">Half-Yearly</option>
+
+        <option value="Yearly">Yearly</option>
+
+    </select>
+
+    <br><br>
+
+
+    <!-- Start Date -->
+
+    <label>Start Date *</label>
+
+    <input type="date"
+           name="start_date"
+           required>
+
+    <br><br>
+
+
+    <!-- End Date -->
+
+    <label>End Date</label>
+
+    <input type="date"
+           name="end_date"
+           id="end_date"
+           readonly>
+
+    <br><br>
+
+
+    <!-- Amount -->
+
+    <label>Amount *</label>
+
+    <input type="number"
+           name="amount"
+           step="0.01"
+           min="0"
+           placeholder="Enter amount"
+           required>
+
+    <br><br>
+
+
+    <!-- Payment Status -->
+
+    <label>Payment Status</label>
+
+    <select name="payment_status">
+
+        <option value="Pending">Pending</option>
+
+        <option value="Paid">Paid</option>
+
+        <option value="Partial">Partial</option>
+
+    </select>
+
+    <br><br>
+
+
+    <!-- Buttons -->
+
+    <button type="submit"
+            class="add-client-btn">
+
+        Add Membership
+
+    </button>
+
+    <a href="/dashboard"
+       class="add-client-btn">
+
+        Cancel
+
+    </a>
+    </div>
+
+</form>
+
+
+</div>
+
+<script>
+
+    /* =========================
+       CLIENT SEARCH
+       ========================= */
+
+    const clientSearch = document.getElementById("client_search");
+    const clientId = document.getElementById("client_id");
+    const clientResults = document.getElementById("client_results");
+    const clientOptions = document.querySelectorAll(".client-option");
+
+    // Hide results initially
+    clientResults.style.display = "none";
+
+
+    // Search clients
+    clientSearch.addEventListener("input", function () {
+
+        const search = this.value.toLowerCase().trim();
+
+        // Clear selected client
+        clientId.value = "";
+
+        if (search === "") {
+            clientResults.style.display = "none";
+            return;
+        }
+
+        let found = false;
+
+        clientOptions.forEach(function (option) {
+
+            const id = option.dataset.id.toLowerCase();
+            const name = option.dataset.name.toLowerCase();
+
+            if (id.includes(search) || name.includes(search)) {
+
+                option.style.display = "block";
+                found = true;
+
+            } else {
+
+                option.style.display = "none";
+
+            }
+
+        });
+
+        if (found) {
+            clientResults.style.display = "block";
+        } else {
+            clientResults.style.display = "none";
+        }
+
+    });
+
+
+    // Select client
+    clientOptions.forEach(function (option) {
+
+        option.addEventListener("click", function () {
+
+            const selectedId = this.dataset.id;
+            const selectedName = this.dataset.name;
+
+            clientSearch.value =
+                selectedId + " - " + selectedName;
+
+            clientId.value = selectedId;
+
+            clientResults.style.display = "none";
+
+        });
+
+    });
+
+
+    /* =========================
+       END DATE CALCULATION
+       ========================= */
+
+    const membershipType =
+        document.querySelector('select[name="membership_type"]');
+
+    const startDate =
+        document.querySelector('input[name="start_date"]');
+
+    const endDate =
+        document.querySelector('input[name="end_date"]');
+
+
+    function updateEndDate() {
+
+        if (!startDate.value || !membershipType.value) {
+
+            endDate.value = "";
+
+            return;
+        }
+
+
+        // Convert start date
+        const date =
+            new Date(startDate.value + "T00:00:00");
+
+
+        let daysToAdd = 0;
+
+
+        // Start date is counted as Day 1
+        switch (membershipType.value) {
+
+            case "Monthly":
+                daysToAdd = 29;
+                break;
+
+            case "Quarterly":
+                daysToAdd = 89;
+                break;
+
+            case "Half-Yearly":
+                daysToAdd = 179;
+                break;
+
+            case "Yearly":
+                daysToAdd = 364;
+                break;
+        }
+
+
+        // Add remaining days
+        date.setDate(date.getDate() + daysToAdd);
+
+
+        // Convert date back to YYYY-MM-DD
+        const year = date.getFullYear();
+
+        const month =
+            String(date.getMonth() + 1).padStart(2, "0");
+
+        const day =
+            String(date.getDate()).padStart(2, "0");
+
+
+        endDate.value =
+            `${year}-${month}-${day}`;
+    }
+
+
+    // When membership type changes
+    membershipType.addEventListener(
+        "change",
+        updateEndDate
+    );
+
+
+    // When start date changes
+    startDate.addEventListener(
+        "change",
+        updateEndDate
+    );
+
+
+    /* =========================
+       FORM VALIDATION
+       ========================= */
+
+    document.querySelector("form").addEventListener(
+        "submit",
+        function (event) {
+
+            if (clientId.value === "") {
+
+                event.preventDefault();
+
+                alert(
+                    "Please select a client from the search results."
+                );
+
+                clientSearch.focus();
+            }
+
+        }
+    );
+
+</script>
+</body>
+</html>
