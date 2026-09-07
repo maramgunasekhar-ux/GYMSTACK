@@ -5,7 +5,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import mysql.connector
 import config
+import cloudinary
+import cloudinary.uploader
 load_dotenv()
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+)
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
@@ -244,12 +251,14 @@ def add_client():
                 str(uuid.uuid4()) + "." + extension
             )
 
-            photo.save(
-                os.path.join(
-                    app.config["UPLOAD_FOLDER"],
-                    photo_filename
-                )
-            )
+            upload_result = cloudinary.uploader.upload(
+              photo,
+                   folder="gymstack/clients"
+                     )
+
+            photo_filename = upload_result["secure_url"]
+                
+            
 
         cursor = db.cursor()
 
@@ -366,7 +375,6 @@ def client_details(client_id):
 
 
 
-
 @app.route("/edit-client/<int:client_id>", methods=["GET", "POST"])
 def edit_client(client_id):
 
@@ -429,23 +437,16 @@ def edit_client(client_id):
                 cursor.close()
                 return "Invalid photo format. Please use JPG, JPEG, PNG or WEBP."
 
-            original_name = secure_filename(photo.filename)
-
-            extension = original_name.rsplit(".", 1)[1].lower()
-
-            import uuid
-
-            photo_filename = (
-                str(uuid.uuid4()) + "." + extension
+            # Upload new photo to Cloudinary
+            upload_result = cloudinary.uploader.upload(
+                photo,
+                folder="gymstack/clients"
             )
 
-            photo.save(
-                os.path.join(
-                    app.config["UPLOAD_FOLDER"],
-                    photo_filename
-                )
-            )
+            # Store Cloudinary secure URL
+            photo_filename = upload_result["secure_url"]
 
+        # Update client information
         query = """
             UPDATE clients
             SET name=%s,
@@ -476,21 +477,7 @@ def edit_client(client_id):
 
         cursor.close()
 
-        # Delete old photo after successful database update
-        if (
-            photo and photo.filename
-            and current_photo
-            and current_photo != photo_filename
-        ):
-
-            old_photo_path = os.path.join(
-                app.config["UPLOAD_FOLDER"],
-                current_photo
-            )
-
-            if os.path.exists(old_photo_path):
-                os.remove(old_photo_path)
-
+        # Redirect to client details
         return redirect(f"/client/{client_id}")
 
     # Get existing client information

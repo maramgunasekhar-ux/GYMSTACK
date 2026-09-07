@@ -108,13 +108,14 @@
 
                     <tr>
                         <td>
-                           {% if client[8] %}
-                      <img src="{{ url_for('static', filename='uploads/clients/' + client[8]) }}"
-                              alt="Client Photo"
-                             class="client-list-photo">
-                         {% else %}
-                          <span>No Photo</span>
-                           {% endif %}
+                    
+    {% if client[8] %}
+    <img src="{{ client[8] }}"
+         alt="Client Photo"
+         class="client-profile-photo">
+{% else %}
+    <span>No Photo</span>
+{% endif %}
                       </td>
 
                         <td class="client-id">{{ client[0] }}</td>

@@ -32,9 +32,9 @@
     <br>
 
     {% if client[9] %}
-        <img src="{{ url_for('static', filename='uploads/clients/' + client[9]) }}"
-             alt="Client Photo"
-             class="client-profile-photo">
+       <img src="{{ client[9] }}"
+     alt="Client Photo"
+     class="client-profile-photo">
     {% else %}
         <p><strong>Client Photo:</strong> No photo uploaded.</p>
     {% endif %}
