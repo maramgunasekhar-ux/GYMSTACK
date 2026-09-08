@@ -16,3 +16,5 @@ static/uploads/
 
 # IDE
 .vscode/
+
+*.sql
